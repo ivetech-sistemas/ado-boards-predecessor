@@ -107,10 +107,10 @@ dados para fins sem relação com a finalidade única; não usa para avaliar cr�
 
 **URL da política de privacidade.** O revisor precisa conseguir abrir o link sem login:
 
-- **Se o repositório no GitHub for público:** use
-  `https://github.com/ivetech-sistemas/ado-boards-predecessor/blob/main/PRIVACIDADE.md`
-  (depois do merge na `main`).
-- **Se for privado:** publique o conteúdo do `PRIVACIDADE.md` numa página pública. Pode ser o site
+- **Se o repositório no GitHub for público:** use a versão em inglês,
+  `https://github.com/ivetech-sistemas/ado-boards-predecessor/blob/main/PRIVACY.md`
+  (depois do merge na `main`). A versão em português é o `PRIVACIDADE.md`.
+- **Se for privado:** publique o conteúdo do `PRIVACY.md` (ou do `PRIVACIDADE.md`) numa página pública. Pode ser o site
   da Ivetech, o GitHub Pages de um repositório público ou uma página do Notion ou do Google Docs
   aberta para leitura.
 
