@@ -11,6 +11,7 @@ import {
   blocoDoCard,
   cardDoElemento,
   CLASSE_DO_BLOCO,
+  colunaDoCard,
   idDoCard,
   pontoDeInsercao,
   type CardNaTela,
@@ -38,6 +39,8 @@ function iniciar(): void {
   let ultimaUrl = location.href;
   let semCardsDesde: number | null = null;
   let avisouSemCards = false;
+  /** Última coluna vista de cada card (board). Mudou de coluna -> relê o estado do card. */
+  const colunas = new Map<number, string>();
 
   const paginaAtual = (): TipoDePagina | null => tipoDePagina(location.pathname);
 
@@ -48,6 +51,14 @@ function iniciar(): void {
     temporizador = setTimeout(() => void executar(), atraso);
   }
 
+  /** Relê o card depois que o Azure DevOps salvar a mudança de coluna/estado. */
+  function relerCardDepois(id: number): void {
+    setTimeout(() => {
+      repo.invalidarCard(id);
+      agendar(0);
+    }, ESPERA_APOS_ARRASTAR_MS);
+  }
+
   function removerTudo(): void {
     document.querySelectorAll(`.${CLASSE_DO_BLOCO}`).forEach((el) => el.remove());
     document.querySelectorAll(`[${ATRIBUTO_MARCA}]`).forEach((el) => el.removeAttribute(ATRIBUTO_MARCA));
@@ -56,6 +67,7 @@ function iniciar(): void {
   function verificarUrl(): void {
     if (location.href === ultimaUrl) return;
     ultimaUrl = location.href;
+    colunas.clear();
     semCardsDesde = null;
     avisouSemCards = false;
     agendar();
@@ -117,6 +129,15 @@ function iniciar(): void {
     vigiarSeletores(tipo, cards.length);
     const visiveis = cards.filter((c) => estaVisivel(c.el));
     if (visiveis.length === 0) return;
+
+    // Card que mudou de coluna (arrastar, teclado ou outra pessoa): o estado mudou.
+    for (const c of visiveis) {
+      const coluna = colunaDoCard(c.el);
+      if (coluna === null) continue;
+      const anterior = colunas.get(c.id);
+      if (anterior !== undefined && anterior !== coluna) relerCardDepois(c.id);
+      colunas.set(c.id, coluna);
+    }
 
     await repo.carregar(
       colecao.base,
@@ -215,11 +236,7 @@ function iniciar(): void {
     const pe = e as PointerEvent;
     const moveu = arraste.moveu || (typeof pe.clientX === 'number' && Math.hypot(pe.clientX - x, pe.clientY - y) > 8);
     arraste = null;
-    if (!moveu) return;
-    setTimeout(() => {
-      repo.invalidarCard(id);
-      agendar(0);
-    }, ESPERA_APOS_ARRASTAR_MS);
+    if (moveu) relerCardDepois(id);
   };
   for (const tipo of ['pointerup', 'dragend', 'drop']) {
     document.addEventListener(tipo, fimDoArraste, { capture: true, passive: true });

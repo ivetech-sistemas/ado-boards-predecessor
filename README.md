@@ -108,17 +108,17 @@ no console do DevTools e use o relatório que ele copia para a área de transfer
 
 | Item | Situação | Decisão / o que conferir |
 | --- | --- | --- |
-| Seletor do card no board | **Pendente** | `src/dom/seletores.ts` tenta, em ordem, `.wit-card[data-itemid]` (o do taskboard), `.wit-card`, `[data-itemid]` e variações, `.board-tile`; sem nenhum, sobe do link `/_workitems/edit/` até um elemento com `role="listitem"`, `draggable` ou classe com "card"/"tile". Ajuste a lista com o relatório. |
+| Seletor do card no board | **Confirmado** (2026-11-21) | `.wit-card[data-itemid]` (classes `wit-card boards-card`, `role="group"`, `aria-roledescription="Card"`). 41 cards achados no board de Backlog items. A mesma estrutura do taskboard. |
 | Seletor do card no taskboard | **Confirmado** (2026-11-21) | `.wit-card[data-itemid]` (classes `wit-card taskboard-card`, `role="group"`, `aria-roledescription="Card"`). 53 cards achados, incluindo os PBIs da coluna dos pais. |
-| ID do card | **Confirmado** no taskboard | `data-itemid`. O título também é um link relativo `/{projeto}/_workitems/edit/{id}`, que serve de reserva. |
-| Ponto de inserção | **Confirmado** no taskboard | `.card-content` (filho direto do card, ao lado da faixa colorida `.card-flag`). O bloco entra no fim, depois dos campos e das tags. |
+| ID do card | **Confirmado** | `data-itemid` nas duas telas. O título também é um link relativo `/{projeto}/_workitems/edit/{id}`, que serve de reserva. |
+| Ponto de inserção | **Confirmado** | `.card-content` (filho direto do card, ao lado da faixa colorida `.card-flag`). O bloco entra no fim: no board, depois das anotações (ex.: "0/6" tasks); no taskboard, depois das tags. Fica fora da área recolhível dos campos (`.scroll-hidden`), então aparece sempre. |
 | Autenticação pela mesma origem | **Confirmado** | `_apis/wit/workitems?$expand=relations` devolveu 200 com o cookie da sessão e o `X-TFS-FedAuthRedirect: Suppress`; o `System.AssignedTo` traz `_links.avatar`. |
 | `DefaultCollection` no `visualstudio.com` | **Confirmado: opcional** | `rssoft.visualstudio.com/_apis` e `rssoft.visualstudio.com/DefaultCollection/_apis` devolvem 200. A base segue a URL da página. |
-| Altura do card e virtualização | **Pendente (visual)** | Taskboard: tabela `bolt-table` com linhas `tr[data-row-index]` no fluxo normal, sem `position: absolute`, `transform` nem altura fixa no card e nos ancestrais próximos. A altura extra deve só aumentar a linha. Falta conferir na tela: rolar até o fim, arrastar task entre colunas e ver se nada se sobrepõe. Board: pendente. |
+| Altura do card e virtualização | **Pendente (visual)** | Nenhuma das telas mostrou sinal de virtualização com altura fixa. Board: colunas `.kanban-board-column` no fluxo normal, com todos os 41 cards renderizados. Taskboard: tabela `bolt-table` com linhas `tr[data-row-index]` no fluxo normal. A altura extra deve só esticar a coluna ou a linha. Falta conferir na tela: rolar, arrastar e ver se nada se sobrepõe. |
 | Variáveis de tema | **Confirmado** (tema escuro) | `--text-secondary-color`, `--text-primary-color`, `--border-subtle-color` e `--focus-border-color` existem. Falta olhar o tema claro na tela. |
 | Observação da tela | Decidido | O `MutationObserver` fica no `body` (com debounce e ignorando as mutações do próprio bloco), porque o contêiner do board é recriado na navegação interna. A troca de URL é detectada por `popstate` e por uma checagem a cada 1 s, já que o `pushState` da página não é visível do mundo isolado do content script. |
 | "+K" | Decidido | N linhas de predecessor (padrão 3) e, se houver mais, uma linha extra "+K" com tooltip listando os restantes. |
-| Card arrastado para outra coluna | Decidido | O card é redesenhado do cache na hora; 2 s depois do arrastar, o estado dele é relido (para o RF9 valer sem esperar o cache vencer). Mover pelo teclado só atualiza quando o cache vencer. |
+| Card que muda de coluna | Decidido | Board: a coluna vem do `data-column` da `.kanban-board-column`. Quando muda (arrastar, teclado ou outra pessoa), o estado do card é relido 2 s depois, para o Azure DevOps salvar antes. Taskboard (sem `data-column`): o mesmo vale ao detectar o arrastar. O card é redesenhado do cache na hora. |
 
 Depois do spike, salve o HTML de um card de cada tela em `tests/fixtures/` (veja
 [`tests/fixtures/LEIA-ME.md`](tests/fixtures/LEIA-ME.md)) e troque as fixtures provisórias.
@@ -135,7 +135,7 @@ Com a extensão carregada e o console do DevTools aberto (filtre por `[predecess
 3. **Board de Features** (ou Epics): mesmo comportamento.
 4. **Taskboard:** uma task com predecessor aberto mostra a linha do mesmo jeito.
 5. **Tema escuro** (Configurações do usuário → Tema): o bloco fica legível.
-6. **Card movido de coluna:** a linha continua no card; movido para Done, o bloco some em ~2 s.
+6. **Card movido de coluna** (arrastando e pelo teclado): a linha continua no card; movido para Done, o bloco some em ~2 s.
 7. **Rolagem longa:** num board com muitos cards, os que entram na tela ganham as linhas; arrastar
    continua funcionando e nenhum card fica sobreposto.
 8. **Predecessor de outro projeto:** a linha aparece, com a cor do processo do outro projeto, e o

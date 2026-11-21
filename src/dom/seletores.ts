@@ -18,12 +18,13 @@ export const ATRIBUTO_MARCA = 'data-ivt-pred';
 export const SELETORES = {
   /**
    * Card. Se um candidato casar com elementos aninhados, fica o mais interno.
-   * Confirmado no spike (taskboard, 2026-11-21): <div class="wit-card ... taskboard-card"
-   * data-itemid="7886" role="group" aria-roledescription="Card">.
+   * Confirmado no spike (2026-11-21), igual nas duas telas, só muda uma classe:
+   *   board:     <div class="wit-card ... boards-card"    data-itemid="7887" role="group" aria-roledescription="Card">
+   *   taskboard: <div class="wit-card ... taskboard-card" data-itemid="7886" role="group" aria-roledescription="Card">
    */
   card: {
     board: [
-      '.wit-card[data-itemid]', // interface nova (Boards Hub); a confirmar no board
+      '.wit-card[data-itemid]', // confirmado no spike
       '.wit-card',
       '[data-itemid]',
       '[data-item-id]',
@@ -62,9 +63,17 @@ export const SELETORES = {
   /**
    * Onde inserir o bloco, dentro do card. Sem match, vai no fim do próprio card.
    * Prefira o contêiner dos campos, para o bloco ficar abaixo deles e dentro da borda do card.
-   * Confirmado no spike (taskboard): <div class="card-content flex-column flex-grow">, irmão
-   * da faixa colorida (.card-flag) e pai do título, dos campos e das tags.
+   * Confirmado no spike (board e taskboard): <div class="card-content flex-column flex-grow">,
+   * irmão da faixa colorida (.card-flag) e pai do título, dos campos, das tags e das anotações.
    */
+  /**
+   * Coluna do card no board (Kanban). Confirmado no spike:
+   * <div class="kanban-board-column ..." data-column="<guid>" data-done="false">.
+   * O taskboard não tem esse atributo; lá a mudança de coluna depende do arrastar.
+   */
+  coluna: '[data-column]',
+  atributoColuna: 'data-column',
+
   insercao: [':scope > .card-content', '.card-content', '.wit-card-content', '.tbTileContent', '.board-tile-content'],
 } as const;
 
@@ -168,6 +177,11 @@ export function cardDoElemento(el: Element | null, tipo: TipoDePagina): HTMLElem
     }
   }
   return null;
+}
+
+/** Identificador da coluna do card, quando a tela expõe (board). */
+export function colunaDoCard(card: HTMLElement): string | null {
+  return card.closest(SELETORES.coluna)?.getAttribute(SELETORES.atributoColuna) ?? null;
 }
 
 /** Onde acrescentar o bloco dentro do card. */
