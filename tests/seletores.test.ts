@@ -13,6 +13,42 @@ const blocoCom = (id: number) =>
     abrir: () => {},
   });
 
+describe('taskboard real (fixture do spike)', () => {
+  beforeEach(() => {
+    document.body.innerHTML = fixture('taskboard.html');
+  });
+
+  it('acha o card pai (PBI) e a task, com o ID do data-itemid', () => {
+    const cards = acharCards(document, 'taskboard');
+    expect(cards.map((c) => c.id)).toEqual([7886, 7957]);
+    expect(cards.every((c) => c.el.matches('.wit-card.taskboard-card[role="group"]'))).toBe(true);
+  });
+
+  it('insere no .card-content, depois das tags, e não mexe nos nativos', () => {
+    const [card] = acharCards(document, 'taskboard');
+    const alvo = pontoDeInsercao(card!.el);
+    expect(alvo.parentElement).toBe(card!.el);
+    expect(alvo.classList.contains('card-content')).toBe(true);
+
+    const filhosAntes = [...alvo.children];
+    alvo.appendChild(blocoCom(10));
+    expect([...alvo.children].slice(0, -1)).toEqual(filhosAntes);
+    expect(alvo.lastElementChild!.previousElementSibling!.classList.contains('flex-column')).toBe(true);
+    expect(idDoCard(card!.el)).toBe(7886);
+    expect(acharCards(document, 'taskboard').map((c) => c.id)).toEqual([7886, 7957]);
+  });
+
+  it('do título até o card (detecção do arrastar)', () => {
+    const titulo = document.querySelector('[data-itemid="7957"] .title-text')!;
+    expect(cardDoElemento(titulo, 'taskboard')?.getAttribute('data-itemid')).toBe('7957');
+  });
+
+  it('o link nativo do título tem o ID (relativo à origem)', () => {
+    const href = document.querySelector('[data-itemid="7886"] a.title')!.getAttribute('href');
+    expect(idDoLink(href)).toBe(7886);
+  });
+});
+
 describe('seletores (fixtures provisórias)', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
@@ -31,8 +67,10 @@ describe('seletores (fixtures provisórias)', () => {
     expect(pontoDeInsercao(card!.el).classList.contains('wit-card-content')).toBe(true);
   });
 
-  it('taskboard: ID pelo id="tile-N"', () => {
-    document.body.innerHTML = fixture('taskboard.provisorio.html');
+  it('taskboard antigo: ID pelo id="tile-N"', () => {
+    document.body.innerHTML = `
+      <div class="tbTile" id="tile-201"><div class="tbTileContent">Implementar</div></div>
+      <div class="tbTile" id="tile-202"><div class="tbTileContent">Testes</div></div>`;
     const cards = acharCards(document, 'taskboard');
     expect(cards.map((c) => c.id)).toEqual([201, 202]);
     expect(pontoDeInsercao(cards[0]!.el).classList.contains('tbTileContent')).toBe(true);

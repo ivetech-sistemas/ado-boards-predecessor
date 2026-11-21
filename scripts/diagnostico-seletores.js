@@ -16,6 +16,7 @@
  */
 (async () => {
   const CANDIDATOS_CARD = [
+    '.wit-card[data-itemid]',
     '.wit-card',
     '[data-itemid]',
     '[data-item-id]',
@@ -27,7 +28,7 @@
     '.taskboard-card',
     '[id^="tile-"]',
   ];
-  const CANDIDATOS_INSERCAO = ['.wit-card-content', '.card-content', '.tbTileContent', '.board-tile-content'];
+  const CANDIDATOS_INSERCAO = ['.card-content', '.wit-card-content', '.tbTileContent', '.board-tile-content'];
   const LINK = 'a[href*="/_workitems/edit/"]';
   const CARD_PELO_LINK = '[role="listitem"], [draggable="true"], [class*="card" i], [class*="tile" i]';
 

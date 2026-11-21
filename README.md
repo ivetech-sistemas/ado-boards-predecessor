@@ -108,14 +108,14 @@ no console do DevTools e use o relatório que ele copia para a área de transfer
 
 | Item | Situação | Decisão / o que conferir |
 | --- | --- | --- |
-| Seletor do card no board | **Pendente** | `src/dom/seletores.ts` tenta, em ordem, `.wit-card`, `[data-itemid]` e variações, `.board-tile`; sem nenhum, sobe do link `/_workitems/edit/` até um elemento com `role="listitem"`, `draggable` ou classe com "card"/"tile". Ajuste a lista com o relatório. |
-| Seletor do card no taskboard | **Pendente** | Mesma estratégia, com `.tbTile` e `id="tile-N"`. |
-| ID do card | **Pendente** | Atributo de dados → `id="tile-N"` → link do work item → campo ID visível. |
-| Ponto de inserção | **Pendente** | Contêiner de conteúdo do card (lista `insercao`), senão o fim do próprio card. O bloco precisa ficar dentro da borda do card. |
-| Autenticação pela mesma origem | **Pendente** | O relatório mostra o status de `_apis/wit/workitems` com o cookie. Esperado: 200. |
-| `DefaultCollection` no `visualstudio.com` | **Pendente** | A base segue a URL da página (com `DefaultCollection` quando a página tem). O relatório testa com e sem. |
-| Altura do card e virtualização | **Pendente** | Conferir num board grande: rolar, arrastar e ver se cards se sobrepõem. Se a virtualização usar altura fixa (o relatório lista as "pistas de virtualização"), trocar as linhas por um ícone com contador e popover, e registrar aqui. |
-| Variáveis de tema | **Pendente** | O relatório lista `--text-secondary-color` e afins nos dois temas. Sem elas, o CSS usa `currentColor` como reserva. |
+| Seletor do card no board | **Pendente** | `src/dom/seletores.ts` tenta, em ordem, `.wit-card[data-itemid]` (o do taskboard), `.wit-card`, `[data-itemid]` e variações, `.board-tile`; sem nenhum, sobe do link `/_workitems/edit/` até um elemento com `role="listitem"`, `draggable` ou classe com "card"/"tile". Ajuste a lista com o relatório. |
+| Seletor do card no taskboard | **Confirmado** (2026-11-21) | `.wit-card[data-itemid]` (classes `wit-card taskboard-card`, `role="group"`, `aria-roledescription="Card"`). 53 cards achados, incluindo os PBIs da coluna dos pais. |
+| ID do card | **Confirmado** no taskboard | `data-itemid`. O título também é um link relativo `/{projeto}/_workitems/edit/{id}`, que serve de reserva. |
+| Ponto de inserção | **Confirmado** no taskboard | `.card-content` (filho direto do card, ao lado da faixa colorida `.card-flag`). O bloco entra no fim, depois dos campos e das tags. |
+| Autenticação pela mesma origem | **Confirmado** | `_apis/wit/workitems?$expand=relations` devolveu 200 com o cookie da sessão e o `X-TFS-FedAuthRedirect: Suppress`; o `System.AssignedTo` traz `_links.avatar`. |
+| `DefaultCollection` no `visualstudio.com` | **Confirmado: opcional** | `rssoft.visualstudio.com/_apis` e `rssoft.visualstudio.com/DefaultCollection/_apis` devolvem 200. A base segue a URL da página. |
+| Altura do card e virtualização | **Pendente (visual)** | Taskboard: tabela `bolt-table` com linhas `tr[data-row-index]` no fluxo normal, sem `position: absolute`, `transform` nem altura fixa no card e nos ancestrais próximos. A altura extra deve só aumentar a linha. Falta conferir na tela: rolar até o fim, arrastar task entre colunas e ver se nada se sobrepõe. Board: pendente. |
+| Variáveis de tema | **Confirmado** (tema escuro) | `--text-secondary-color`, `--text-primary-color`, `--border-subtle-color` e `--focus-border-color` existem. Falta olhar o tema claro na tela. |
 | Observação da tela | Decidido | O `MutationObserver` fica no `body` (com debounce e ignorando as mutações do próprio bloco), porque o contêiner do board é recriado na navegação interna. A troca de URL é detectada por `popstate` e por uma checagem a cada 1 s, já que o `pushState` da página não é visível do mundo isolado do content script. |
 | "+K" | Decidido | N linhas de predecessor (padrão 3) e, se houver mais, uma linha extra "+K" com tooltip listando os restantes. |
 | Card arrastado para outra coluna | Decidido | O card é redesenhado do cache na hora; 2 s depois do arrastar, o estado dele é relido (para o RF9 valer sem esperar o cache vencer). Mover pelo teclado só atualiza quando o cache vencer. |

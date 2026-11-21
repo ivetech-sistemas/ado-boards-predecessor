@@ -22,7 +22,8 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). 
 - Tema claro e escuro pelas variáveis de tema do Azure DevOps.
 - Script de diagnóstico do spike (`scripts/diagnostico-seletores.js`).
 
-### Pendente
+### Spike
 
-- Spike na tela real: seletores, ponto de inserção, `DefaultCollection` no `_apis` e efeito da
-  altura do card na virtualização (ver README).
+- Taskboard confirmado: card `.wit-card[data-itemid]`, inserção em `.card-content`, autenticação
+  pela mesma origem e `DefaultCollection` opcional no `_apis`. Fixture real em `tests/fixtures/taskboard.html`.
+- Pendente: board (Kanban) e conferência visual da altura do card (ver README).

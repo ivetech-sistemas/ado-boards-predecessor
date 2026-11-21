@@ -16,9 +16,14 @@ export const CLASSE_DO_BLOCO = 'ivt-pred-bloco';
 export const ATRIBUTO_MARCA = 'data-ivt-pred';
 
 export const SELETORES = {
-  /** Card. Se um candidato casar com elementos aninhados, fica o mais interno. */
+  /**
+   * Card. Se um candidato casar com elementos aninhados, fica o mais interno.
+   * Confirmado no spike (taskboard, 2026-11-21): <div class="wit-card ... taskboard-card"
+   * data-itemid="7886" role="group" aria-roledescription="Card">.
+   */
   card: {
     board: [
+      '.wit-card[data-itemid]', // interface nova (Boards Hub); a confirmar no board
       '.wit-card',
       '[data-itemid]',
       '[data-item-id]',
@@ -28,6 +33,7 @@ export const SELETORES = {
       '.kanban-card',
     ],
     taskboard: [
+      '.wit-card[data-itemid]', // confirmado no spike
       '.wit-card',
       '[data-itemid]',
       '[data-item-id]',
@@ -56,8 +62,10 @@ export const SELETORES = {
   /**
    * Onde inserir o bloco, dentro do card. Sem match, vai no fim do próprio card.
    * Prefira o contêiner dos campos, para o bloco ficar abaixo deles e dentro da borda do card.
+   * Confirmado no spike (taskboard): <div class="card-content flex-column flex-grow">, irmão
+   * da faixa colorida (.card-flag) e pai do título, dos campos e das tags.
    */
-  insercao: ['.wit-card-content', '.card-content', '.tbTileContent', '.board-tile-content'],
+  insercao: [':scope > .card-content', '.card-content', '.wit-card-content', '.tbTileContent', '.board-tile-content'],
 } as const;
 
 export interface CardNaTela {
