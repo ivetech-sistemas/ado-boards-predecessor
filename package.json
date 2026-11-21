@@ -20,6 +20,7 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p . && tsc --noEmit -p tests",
     "icones": "node scripts/gerar-icones.mjs",
+    "capturas": "npm run build && node scripts/capturas.mjs",
     "zip": "npm run build && node scripts/empacotar.mjs"
   },
   "license": "MIT",
