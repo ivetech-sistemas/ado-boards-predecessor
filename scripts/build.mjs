@@ -11,6 +11,7 @@ const copiar = () => {
   cpSync('manifest.json', 'dist/manifest.json');
   cpSync('src/estilos.css', 'dist/estilos.css');
   cpSync('src/opcoes/opcoes.html', 'dist/opcoes.html');
+  cpSync('icons', 'dist/icons', { recursive: true });
 };
 
 const config = {

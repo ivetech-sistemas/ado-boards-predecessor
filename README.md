@@ -1,74 +1,136 @@
-# Predecessores no card (Azure Boards)
+<p align="center">
+  <img src="icons/icon128.png" width="96" height="96" alt="">
+</p>
 
-Extensão de navegador (Edge e Chrome, Manifest V3) que mostra nos cards do **board** (Kanban) e do
-**taskboard** (sprint) do Azure Boards os predecessores ainda não concluídos de cada work item:
+<h1 align="center">Predecessores no card</h1>
+
+<p align="center">
+  Extensão para Edge e Chrome que mostra, dentro dos cards do <strong>Azure Boards</strong>,
+  os predecessores que ainda não foram concluídos.
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/licen%C3%A7a-MIT-blue.svg" alt="Licença MIT"></a>
+  <img src="https://img.shields.io/badge/Manifest-V3-informational.svg" alt="Manifest V3">
+  <img src="https://img.shields.io/badge/Edge%20%7C%20Chrome-suportado-success.svg" alt="Edge e Chrome">
+</p>
+
+---
+
+No Azure Boards, a dependência entre itens (o link **Predecessor**) só aparece quando você abre o
+item. Esta extensão desenha no próprio card, no **board** (Kanban) e no **taskboard** da sprint,
+uma linha por predecessor em aberto:
 
 ```
-[←] (●) (foto) Título do predecessor, cortado em uma linha…
+▍ 7887  Cadastro de cupons de desconto
+▍ ● New
+▍ Effort 14
+▍ ─────────────────────────────────────
+▍ ← ● (MS) Criar API de clientes…
+▍ ← ● (JL) Modelo de dados de assinatu…
 ```
 
-- **Seta:** "depende de".
-- **Bolinha:** cor do estado no processo do time; o nome do estado aparece no tooltip.
-- **Foto do responsável:** sem foto, as iniciais; sem responsável, um espaço vazio.
-- **Título:** em uma linha, com reticências; o tooltip mostra `#id Tipo — título completo`.
-- **Clique:** abre o predecessor (nova aba por padrão) sem abrir o card nem iniciar o arrastar.
+- **←** o card depende deste item;
+- **●** cor do estado do predecessor no processo do time (nome do estado no tooltip);
+- **foto** do responsável, ou as iniciais; sem responsável, um espaço em branco para manter o alinhamento;
+- **título** em uma linha. O clique abre o predecessor numa nova aba sem abrir o card nem iniciar o arrastar.
 
-O predecessor concluído (estado de categoria `Completed` ou `Removed`) não aparece.
-A especificação completa está em [`extensao-predecessores-azure-boards.md`](extensao-predecessores-azure-boards.md).
+Predecessor concluído não aparece. Se o predecessor for movido para Done, a linha some sozinha.
 
-## Instalação (piloto)
+*English: a Chromium (Edge/Chrome) extension that shows, inside Azure Boards cards (Kanban board
+and sprint taskboard), the predecessors (`Dependency-Reverse` links) that are not done yet: state
+color, assignee avatar and a clickable title. No data leaves Azure DevOps.*
 
-Pré-requisito: Node 20 ou mais novo.
+## Recursos
 
-```powershell
+- Board de qualquer nível (Epics, Features, Backlog items) e taskboard da sprint.
+- "Concluído" avaliado pela **categoria** do estado (`Completed` ou `Removed`), não pelo nome. Funciona
+  em qualquer processo (Scrum, Agile, CMMI, herdado) e em qualquer idioma.
+- Predecessores de **outros projetos** da mesma organização.
+- Predecessor sem permissão de leitura aparece só como `#id`.
+- No máximo 3 linhas por card (configurável), com "+K" e um tooltip listando os restantes.
+- Card concluído não mostra predecessores (configurável).
+- `dev.azure.com/{org}` e `{org}.visualstudio.com` (com ou sem `DefaultCollection`).
+- Tema claro e escuro, pelas variáveis de tema do próprio Azure DevOps.
+- Leve: lotes de até 200 itens por requisição, no máximo 2 requisições simultâneas e cache em memória.
+
+## Privacidade
+
+- Os dados vêm direto da API do Azure DevOps da sua organização, **com a sua própria sessão**, do
+  mesmo jeito que a página faz. Não há PAT nem credencial guardada.
+- **Nada sai do Azure DevOps**: não há servidor da extensão, telemetria nem anúncios.
+- Permissões: só `storage` (para as opções) e os domínios `dev.azure.com` e `*.visualstudio.com`.
+
+Detalhes em [PRIVACIDADE.md](PRIVACIDADE.md).
+
+## Instalação
+
+### Pela loja
+
+O link da Chrome Web Store entra aqui quando a extensão for publicada. No Edge, o mesmo link
+funciona: na primeira vez, clique em **Permitir extensões de outras lojas**.
+
+### A partir do código
+
+Pré-requisito: [Node.js](https://nodejs.org/) 20 ou mais novo.
+
+```bash
+git clone https://github.com/ivetech-sistemas/ado-boards-predecessor.git
+cd ado-boards-predecessor
 npm install
 npm run build
 ```
 
 1. Abra `edge://extensions` (ou `chrome://extensions`).
 2. Ligue o **Modo de desenvolvedor**.
-3. Clique em **Carregar sem compactação** e escolha a pasta `dist/`.
-4. Abra um board ou um taskboard no Azure DevOps e recarregue a página.
-
-Depois de mudar o código, rode `npm run build` (ou deixe `npm run watch` rodando) e clique em
-**Recarregar** na extensão. A aba do Azure DevOps também precisa ser recarregada.
-
-Para empacotar (Edge Add-ons ou Chrome Web Store):
-
-```powershell
-npm run build
-Compress-Archive -Path dist\* -DestinationPath predecessores.zip -Force
-```
+3. Clique em **Carregar sem compactação** e escolha a pasta **`dist`**.
+4. Abra (ou recarregue) um board ou taskboard do Azure DevOps.
 
 ## Opções
 
-Clique com o botão direito no ícone da extensão e escolha **Opções**. Elas ficam em
-`chrome.storage.sync` e valem na hora para as abas abertas.
+No menu de extensões do navegador, clique com o botão direito em **Predecessores no card** e
+escolha **Opções**. As mudanças valem na hora para as abas abertas.
 
 | Opção | Padrão |
 | --- | --- |
 | Ligar no board | sim |
 | Ligar no taskboard | sim |
-| Máximo de linhas por card | 3 (com mais predecessores, aparece "+K", com tooltip listando os restantes) |
+| Máximo de linhas por card | 3 |
 | Abrir o predecessor em nova aba | sim (Ctrl+clique e o botão do meio sempre abrem em nova aba) |
 | Esconder em card concluído | sim |
 | Validade do cache (s) | 60 |
 
-## Como funciona
+## Limitações conhecidas
 
-- **Autenticação:** as chamadas ao `_apis` são da mesma origem da página e usam o cookie da sessão
-  (`credentials: 'include'` e `X-TFS-FedAuthRedirect: Suppress`). Não há PAT nem credencial
-  guardada. Se a sessão vencer (401), o bloco some até você entrar de novo.
-- **Chamadas**, em lotes de até 200 IDs e no máximo 2 simultâneas:
-  1. `workitems?ids=…&$expand=relations` para os cards visíveis (links `Dependency-Reverse` e o estado do card);
-  2. `workitems?ids=…&fields=…` para os predecessores;
-  3. `workitemtypes/{tipo}/states` por projeto e tipo (cor e categoria), em cache enquanto a página estiver aberta.
-- **Cache** em memória por ID, com a validade configurada. A tela é reavaliada (debounce de 300 ms)
-  quando o board muda, quando você rola, quando volta para a aba e 2 s depois de arrastar um card.
-- **Nenhum dado sai do domínio do Azure DevOps** e não há telemetria. Permissões: só `storage` e os
-  domínios `dev.azure.com` e `*.visualstudio.com`.
+- **Mudança na tela do Azure DevOps.** O Azure DevOps não oferece ponto de extensão dentro do card,
+  então a extensão acrescenta o bloco à tela nativa. Se a Microsoft mudar o HTML do card, o bloco
+  some (o board continua funcionando normalmente) até `src/dom/seletores.ts` ser atualizado. Nesse
+  caso, a extensão avisa no console com o prefixo `[predecessores]`.
+- **Fora do escopo por enquanto:** sucessores, backlog em lista, consultas, Delivery Plans e Firefox.
 
-### Estrutura
+## Desenvolvimento
+
+| Comando | O que faz |
+| --- | --- |
+| `npm run build` | Gera `dist/` |
+| `npm run watch` | Build contínuo, com source map |
+| `npm test` | Testes (Vitest + jsdom) |
+| `npm run typecheck` | TypeScript, sem emitir |
+| `npm run zip` | Build + `predecessores-v{versão}.zip`, pronto para a loja |
+| `npm run icones` | Regera os ícones em `icons/` |
+
+Depois de mudar o código, rode `npm run build` (ou deixe o `watch` rodando), clique em
+**Recarregar** na extensão e recarregue a aba do Azure DevOps.
+
+### Como funciona
+
+1. O content script detecta a página de board ou taskboard, inclusive na navegação interna, sem recarregar.
+2. Acha os cards na tela (`.wit-card[data-itemid]`) e observa as mudanças com um `MutationObserver`,
+   com debounce de 300 ms.
+3. Busca em lote os links `System.LinkTypes.Dependency-Reverse` dos cards visíveis, depois os campos
+   dos predecessores e, por fim, as cores e categorias dos estados de cada tipo.
+4. Monta o bloco e acrescenta ao fim do `.card-content`, sem alterar nenhum elemento nativo. O card
+   decorado recebe `data-ivt-pred="<id>:<hash>"` para não ser redesenhado à toa.
 
 ```
 src/
@@ -76,84 +138,38 @@ src/
   content/dados.ts          cache por ID e montagem das linhas de cada card
   dom/seletores.ts          os ÚNICOS seletores da tela do Azure DevOps
   dom/bloco.ts              monta o bloco de linhas e isola os eventos do card
-  api/base.ts               base da coleção e tipo de página, a partir da URL
-  api/http.ts               GET com o cookie da sessão, limite de 2 simultâneas
-  api/workitems.ts          lotes de links e de campos
-  api/estados.ts            estados do tipo (cor e categoria)
+  api/                      base da coleção, HTTP, work items e estados
   dominio/predecessores.ts  funções puras: relações, filtro de concluídos, corte em N linhas
-  opcoes/                   página de opções e leitura das opções
-  estilos.css               CSS com o prefixo ivt-pred- e as variáveis de tema
-scripts/
-  build.mjs                 esbuild -> dist/
-  diagnostico-seletores.js  script do spike, para colar no console do DevTools
-tests/                      Vitest (funções puras, API com respostas falsas, bloco e seletores em jsdom)
+  opcoes/                   página de opções
+  estilos.css               CSS com o prefixo ivt-pred-
+scripts/                    build, empacotamento, ícones e diagnóstico de seletores
+tests/                      testes e fixtures com o HTML real dos cards
+docs/                       especificação, decisões técnicas, roteiro de teste e publicação
 ```
 
-### Comandos
+### Documentação
 
-| Comando | O que faz |
-| --- | --- |
-| `npm run build` | Gera `dist/` |
-| `npm run watch` | Build contínuo, com source map |
-| `npm test` | Testes (Vitest) |
-| `npm run typecheck` | TypeScript sem emitir |
+- [Especificação](docs/especificacao.md)
+- [Decisões técnicas e spike](docs/decisoes-tecnicas.md)
+- [Roteiro de teste manual](docs/roteiro-de-teste.md)
+- [Como publicar na Chrome Web Store](docs/publicacao-chrome-web-store.md)
+- [Changelog](CHANGELOG.md)
 
-## Spike: decisões e pendências
+## Contribuindo
 
-O código foi escrito antes do spike na tela real. Os itens abaixo precisam ser confirmados num
-board e num taskboard autenticados; atualize esta seção com o resultado.
+Contribuições são bem-vindas: issues com bugs, sugestões e pull requests.
 
-Para fazer o spike, abra o board, cole [`scripts/diagnostico-seletores.js`](scripts/diagnostico-seletores.js)
-no console do DevTools e use o relatório que ele copia para a área de transferência.
-
-| Item | Situação | Decisão / o que conferir |
-| --- | --- | --- |
-| Seletor do card no board | **Confirmado** (2026-11-21) | `.wit-card[data-itemid]` (classes `wit-card boards-card`, `role="group"`, `aria-roledescription="Card"`). 41 cards achados no board de Backlog items. A mesma estrutura do taskboard. |
-| Seletor do card no taskboard | **Confirmado** (2026-11-21) | `.wit-card[data-itemid]` (classes `wit-card taskboard-card`, `role="group"`, `aria-roledescription="Card"`). 53 cards achados, incluindo os PBIs da coluna dos pais. |
-| ID do card | **Confirmado** | `data-itemid` nas duas telas. O título também é um link relativo `/{projeto}/_workitems/edit/{id}`, que serve de reserva. |
-| Ponto de inserção | **Confirmado** | `.card-content` (filho direto do card, ao lado da faixa colorida `.card-flag`). O bloco entra no fim: no board, depois das anotações (ex.: "0/6" tasks); no taskboard, depois das tags. Fica fora da área recolhível dos campos (`.scroll-hidden`), então aparece sempre. |
-| Autenticação pela mesma origem | **Confirmado** | `_apis/wit/workitems?$expand=relations` devolveu 200 com o cookie da sessão e o `X-TFS-FedAuthRedirect: Suppress`; o `System.AssignedTo` traz `_links.avatar`. |
-| `DefaultCollection` no `visualstudio.com` | **Confirmado: opcional** | `rssoft.visualstudio.com/_apis` e `rssoft.visualstudio.com/DefaultCollection/_apis` devolvem 200. A base segue a URL da página. |
-| Altura do card e virtualização | **Pendente (visual)** | Nenhuma das telas mostrou sinal de virtualização com altura fixa. Board: colunas `.kanban-board-column` no fluxo normal, com todos os 41 cards renderizados. Taskboard: tabela `bolt-table` com linhas `tr[data-row-index]` no fluxo normal. A altura extra deve só esticar a coluna ou a linha. Falta conferir na tela: rolar, arrastar e ver se nada se sobrepõe. |
-| Variáveis de tema | **Confirmado** (tema escuro) | `--text-secondary-color`, `--text-primary-color`, `--border-subtle-color` e `--focus-border-color` existem. Falta olhar o tema claro na tela. |
-| Observação da tela | Decidido | O `MutationObserver` fica no `body` (com debounce e ignorando as mutações do próprio bloco), porque o contêiner do board é recriado na navegação interna. A troca de URL é detectada por `popstate` e por uma checagem a cada 1 s, já que o `pushState` da página não é visível do mundo isolado do content script. |
-| "+K" | Decidido | N linhas de predecessor (padrão 3) e, se houver mais, uma linha extra "+K" com tooltip listando os restantes. |
-| Card que muda de coluna | Decidido | Board: a coluna vem do `data-column` da `.kanban-board-column`. Quando muda (arrastar, teclado ou outra pessoa), o estado do card é relido 2 s depois, para o Azure DevOps salvar antes. Taskboard (sem `data-column`): o mesmo vale ao detectar o arrastar. O card é redesenhado do cache na hora. |
-
-Depois do spike, salve o HTML de um card de cada tela em `tests/fixtures/` (veja
-[`tests/fixtures/LEIA-ME.md`](tests/fixtures/LEIA-ME.md)) e troque as fixtures provisórias.
-
-## Roteiro de teste manual
-
-Com a extensão carregada e o console do DevTools aberto (filtre por `[predecessores]`):
-
-1. **Board de Backlog items:** um PBI com dois predecessores, um In Progress atribuído e um Done.
-   O card mostra uma linha só: seta, bolinha na cor do In Progress, foto e título em uma linha.
-   O clique abre o predecessor em nova aba e não abre o card.
-2. **Predecessor concluído some:** mova esse predecessor para Done e recarregue o board (ou espere
-   o cache vencer e volte para a aba). A linha some.
-3. **Board de Features** (ou Epics): mesmo comportamento.
-4. **Taskboard:** uma task com predecessor aberto mostra a linha do mesmo jeito.
-5. **Tema escuro** (Configurações do usuário → Tema): o bloco fica legível.
-6. **Card movido de coluna** (arrastando e pelo teclado): a linha continua no card; movido para Done, o bloco some em ~2 s.
-7. **Rolagem longa:** num board com muitos cards, os que entram na tela ganham as linhas; arrastar
-   continua funcionando e nenhum card fica sobreposto.
-8. **Predecessor de outro projeto:** a linha aparece, com a cor do processo do outro projeto, e o
-   clique abre no projeto dele.
-9. **Predecessor sem responsável:** espaço vazio no lugar da foto, alinhado com as outras linhas.
-10. **Predecessor sem permissão:** a linha mostra só a seta e `#id`, sem link.
-11. **Mais de 3 predecessores abertos:** 3 linhas e "+K"; o tooltip do "+K" lista os restantes.
-12. **Sessão vencida:** com a sessão expirada, o bloco some e o board continua normal.
-13. **Domínios:** `rssoft.visualstudio.com/DefaultCollection` e `dev.azure.com/{org}`.
-14. **Extensão desligada:** o board fica igual ao nativo.
-
-## Riscos conhecidos
-
-- **A Microsoft muda a tela do board:** o bloco some (o board continua funcionando) até
-  `src/dom/seletores.ts` ser atualizado. Numa página de board sem nenhum card reconhecido, a
-  extensão avisa uma vez no console após 8 s.
-- **Altura extra do card:** ver a pendência de virtualização acima.
+- **O bloco sumiu depois de uma atualização do Azure DevOps?** Abra o board, cole
+  [`scripts/diagnostico-seletores.js`](scripts/diagnostico-seletores.js) no console do DevTools e
+  anexe o relatório na issue. Antes, apague nomes e títulos que não possam ser públicos.
+- Antes do PR, rode `npm test` e `npm run typecheck`, e siga o
+  [roteiro de teste manual](docs/roteiro-de-teste.md) nas telas que a mudança afeta.
+- Seletores da tela do Azure DevOps ficam **só** em `src/dom/seletores.ts`.
+- Registre a mudança no [CHANGELOG.md](CHANGELOG.md).
 
 ## Licença
 
-MIT. Veja [`LICENSE`](LICENSE).
+[MIT](LICENSE) © 2026 Ivetech Sistemas.
+
+Este projeto não é afiliado nem endossado pela Microsoft. Azure DevOps e Azure Boards são marcas da
+Microsoft Corporation.
