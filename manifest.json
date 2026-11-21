@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Predecessores no card (Azure Boards)",
+  "short_name": "Predecessores",
+  "version": "0.1.0",
+  "description": "Mostra nos cards do board e do taskboard do Azure Boards os predecessores ainda não concluídos.",
+  "minimum_chrome_version": "111",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://dev.azure.com/*",
+    "https://*.visualstudio.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://dev.azure.com/*",
+        "https://*.visualstudio.com/*"
+      ],
+      "js": ["content.js"],
+      "css": ["estilos.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_ui": {
+    "page": "opcoes.html",
+    "open_in_tab": false
+  }
+}
