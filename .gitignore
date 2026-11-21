@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.zip
+.vs/
+.vscode/
+*.log
+*.stackdump
+*.pem
+*.crx
+dist-capturas/

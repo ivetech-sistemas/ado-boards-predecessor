@@ -1,0 +1,120 @@
+/*
+ * Bloco de predecessores no card. Tudo com o prefixo ivt-pred-.
+ * As cores vêm das variáveis de tema do Azure DevOps (claro e escuro), com reserva.
+ * As reservas usam currentColor, que já segue o tema do card.
+ */
+
+.ivt-pred-bloco {
+  --ivt-pred-texto: var(--text-secondary-color, rgba(0, 0, 0, 0.55));
+  --ivt-pred-texto-forte: var(--text-primary-color, rgba(0, 0, 0, 0.9));
+
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px solid var(--border-subtle-color, color-mix(in srgb, currentColor 15%, transparent));
+  color: var(--ivt-pred-texto);
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: normal;
+  text-align: left;
+  cursor: default;
+  user-select: none;
+}
+
+.ivt-pred-linha {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-sizing: border-box;
+  height: 18px;
+  min-width: 0;
+  max-width: 100%;
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+a.ivt-pred-linha,
+a.ivt-pred-linha:visited {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a.ivt-pred-linha:hover,
+a.ivt-pred-linha:focus-visible {
+  color: var(--ivt-pred-texto-forte);
+}
+
+a.ivt-pred-linha:hover .ivt-pred-titulo,
+a.ivt-pred-linha:focus-visible .ivt-pred-titulo {
+  text-decoration: underline;
+}
+
+a.ivt-pred-linha:focus-visible {
+  outline: 1px solid var(--focus-border-color, currentColor);
+  outline-offset: -1px;
+  border-radius: 2px;
+}
+
+.ivt-pred-seta {
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+}
+
+.ivt-pred-estado {
+  flex: 0 0 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #b2b2b2;
+}
+
+.ivt-pred-avatar {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-sizing: border-box;
+}
+
+.ivt-pred-iniciais {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--ivt-pred-texto-forte);
+  background-color: color-mix(in srgb, currentColor 14%, transparent);
+}
+
+.ivt-pred-sem-responsavel {
+  visibility: hidden;
+}
+
+.ivt-pred-titulo {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ivt-pred-sem-acesso .ivt-pred-titulo {
+  font-style: italic;
+}
+
+.ivt-pred-mais {
+  padding-left: 16px;
+  font-weight: 600;
+  cursor: help;
+}
