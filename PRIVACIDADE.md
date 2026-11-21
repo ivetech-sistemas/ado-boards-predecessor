@@ -1,5 +1,7 @@
 # Política de privacidade — Predecessores no card (Azure Boards)
 
+*English version: [PRIVACY.md](PRIVACY.md).*
+
 Última atualização: 21 de novembro de 2026.
 
 A extensão "Predecessores no card" mostra, nos cards do board e do taskboard do Azure Boards, os

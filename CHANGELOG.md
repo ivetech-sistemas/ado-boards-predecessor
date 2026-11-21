@@ -23,7 +23,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). 
 - Script de diagnóstico do spike (`scripts/diagnostico-seletores.js`).
 - Ícones (16, 32, 48 e 128 px) gerados por `npm run icones`, sem logo de terceiros.
 - `npm run zip`: empacota `dist/` para a Chrome Web Store e a Edge Add-ons.
-- Política de privacidade (`PRIVACIDADE.md`) e guia de publicação (`docs/publicacao-chrome-web-store.md`).
+- Política de privacidade em português (`PRIVACIDADE.md`) e em inglês (`PRIVACY.md`) e guia de publicação (`docs/publicacao-chrome-web-store.md`).
 - README completo para o projeto aberto (licença MIT), com imagens; especificação, decisões técnicas e roteiro de teste em `docs/`.
 - `npm run capturas`: gera as imagens do README com o código real da extensão sobre uma demonstração com dados fictícios.
 

@@ -246,7 +246,7 @@ relido cerca de 2 s depois.
 | `https://*.visualstudio.com/*` | Desenhar as linhas e ler a API (organizações em `*.visualstudio.com`) |
 
 A extensão **não** pede `tabs`, `cookies`, `webRequest`, `scripting` nem acesso a outros sites.
-Política completa: [PRIVACIDADE.md](PRIVACIDADE.md).
+Política completa: [PRIVACIDADE.md](PRIVACIDADE.md) (português) e [PRIVACY.md](PRIVACY.md) (English).
 
 ## Compatibilidade
 
@@ -483,7 +483,7 @@ Contribuições são bem-vindas: bugs, ideias e pull requests.
 | [docs/decisoes-tecnicas.md](docs/decisoes-tecnicas.md) | Decisões do spike: seletores, API, altura do card |
 | [docs/roteiro-de-teste.md](docs/roteiro-de-teste.md) | Roteiro de teste manual |
 | [docs/publicacao-chrome-web-store.md](docs/publicacao-chrome-web-store.md) | Como publicar na Chrome Web Store e na Edge Add-ons |
-| [PRIVACIDADE.md](PRIVACIDADE.md) | Política de privacidade |
+| [PRIVACIDADE.md](PRIVACIDADE.md) / [PRIVACY.md](PRIVACY.md) | Política de privacidade (português / English) |
 | [CHANGELOG.md](CHANGELOG.md) | Histórico de versões |
 
 ## Licença
